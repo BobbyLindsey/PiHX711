@@ -17,7 +17,7 @@ hx = HX711(5, 6)
 # If you're experiencing super random values, change these values to MSB or LSB until to get more stable values.
 # There is some code below to debug and log the order of the bits and the bytes.
 # The first parameter is the order in which the bytes are used to build the "long" value.
-# The second paramter is the order of the bits inside each byte.
+# The second parameter is the order of the bits inside each byte.
 # According to the HX711 Datasheet, the second parameter is MSB so you shouldn't need to modify it.
 hx.set_reading_format("LSB", "MSB")
 
