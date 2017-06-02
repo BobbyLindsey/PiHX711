@@ -1,12 +1,13 @@
 import RPi.GPIO as GPIO
 import time
 import sys
-from hx711 import HX711
+from hx7113 import HX711
 
-def cleanAndExit():
-    print "Cleaning..."
+
+def cleanandexit():
+    print("Cleaning...")
     GPIO.cleanup()
-    print "Bye!"
+    print("Bye!")
     sys.exit()
 
 hx = HX711(5, 6)
@@ -33,7 +34,7 @@ hx.tare()
 
 while True:
     try:
-        # These three lines are usefull to debug wether to use MSB or LSB in the reading formats
+        # These three lines are useful to debug whether to use MSB or LSB in the reading formats
         # for the first parameter of "hx.set_reading_format("LSB", "MSB")".
         # Comment the two lines "val = hx.get_weight(5)" and "print val" and uncomment the three lines to see what it prints.
         #np_arr8_string = hx.get_np_arr8_string()
@@ -42,10 +43,10 @@ while True:
         
         # Prints the weight. Comment if you're debbuging the MSB and LSB issue.
         val = hx.get_weight(5)
-        print val
+        print(val)
 
         hx.power_down()
         hx.power_up()
         time.sleep(0.5)
     except (KeyboardInterrupt, SystemExit):
-        cleanAndExit()
+        cleanandexit()
