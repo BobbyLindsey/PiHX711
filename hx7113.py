@@ -121,8 +121,11 @@ class HX711:
         for i in range(times):
             values.append(self.read_int())
         avg = numpy.average(values)
+        print("Average:",avg)
         for value in values:
+            print("Checking:", value)
             if (value > 2 * avg) or (value < int(avg/2)):
+                print("Removing:", value)
                 values.remove(value)
         return int(numpy.average(values))
 
