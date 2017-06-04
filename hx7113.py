@@ -39,7 +39,7 @@ class HX711:
             self.GAIN = 1
         elif gain is 64:
             self.GAIN = 3
-        elif gain is 32:
+        elif gain is 32:  # This will read from channel B
             self.GAIN = 2
 
         GPIO.output(self.PD_SCK, False)
@@ -50,6 +50,12 @@ class HX711:
         for i in range(size):
             ret.append(False)
         return ret
+
+    def read_alt(self):
+        while not self.is_ready():
+            pass
+
+        # databits = self.createBoolList(24)
 
     def read(self):  # read the value from the HX711 and return as an array of 4 bytes
         while not self.is_ready():
@@ -62,6 +68,7 @@ class HX711:
         for j in range(self.byte_range_values[0], self.byte_range_values[1], self.byte_range_values[2]):
             for i in range(self.bit_range_values[0], self.bit_range_values[1], self.bit_range_values[2]):
                 GPIO.output(self.PD_SCK, True)  # Tell the HX711 to give you the next bit
+                time.sleep(0.0000001)  # Give the HX711 time to respond
                 databits[j][i] = GPIO.input(self.DOUT)  # Read the next bit
                 GPIO.output(self.PD_SCK, False)  # Tell the HX711 that you're done reading that bit
             databytes[j] = numpy.packbits(numpy.uint8(databits[j]))
@@ -76,7 +83,7 @@ class HX711:
         #    return self.lastVal
 
         databytes[2] ^= 0x80
-        #print(databytes)
+        # print(databytes)
 
         return databytes
 
@@ -166,7 +173,7 @@ class HX711:
         self.REFERENCE_UNIT = reference_unit
 
     # HX711 datasheet states that setting the PDA_CLOCK pin on high for >60 microseconds would power off the chip.
-    # I used 75 microseconds, just in case.
+    # I used 100 microseconds, just in case.
     # I've found it is good practice to reset the hx711 if it wasn't used for more than a few seconds.
     def power_down(self):
         GPIO.output(self.PD_SCK, False)
@@ -175,7 +182,7 @@ class HX711:
 
     def power_up(self):
         GPIO.output(self.PD_SCK, False)
-        time.sleep(0.000075)
+        time.sleep(0.0001)
 
     def reset(self):
         self.power_down()
