@@ -1,6 +1,6 @@
 import RPi.GPIO as GPIO
 import time
-import numpy  # sudo apt-get python-numpy
+import numpy  # sudo apt-get python3-numpy
 
 
 class HX711:
@@ -76,7 +76,7 @@ class HX711:
         #    return self.lastVal
 
         databytes[2] ^= 0x80
-        print(databytes)
+        #print(databytes)
 
         return databytes
 
@@ -120,7 +120,7 @@ class HX711:
         for i in range(times):
             values += self.read_int()
 
-        return values / times
+        return int(values / times)
 
     def get_value(self, times=3):
         return self.read_average(times) - self.OFFSET
@@ -128,7 +128,7 @@ class HX711:
     def get_weight(self, times=3):
         value = self.get_value(times)
         value = value / self.REFERENCE_UNIT
-        return value
+        return int(value)
 
     def tare(self, times=15):
 
