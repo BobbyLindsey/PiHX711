@@ -116,11 +116,15 @@ class HX711:
         return self.lastVal
 
     def read_average(self, times=3):
-        values = 0
+        values = []
+        avg = 0
         for i in range(times):
-            values += self.read_int()
-
-        return int(values / times)
+            values.append(self.read_int())
+        avg = numpy.average(values)
+        for value in values:
+            if (value > 2 * avg) or (value < int(avg/2))
+                values.remove(value)
+        return int(numpy.average(values))
 
     def get_value(self, times=3):
         return self.read_average(times) - self.OFFSET
