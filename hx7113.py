@@ -68,9 +68,9 @@ class HX711:
         for j in range(self.byte_range_values[0], self.byte_range_values[1], self.byte_range_values[2]):
             for i in range(self.bit_range_values[0], self.bit_range_values[1], self.bit_range_values[2]):
                 GPIO.output(self.PD_SCK, True)  # Tell the HX711 to give you the next bit
-                time.sleep(0.0000001)  # Give the HX711 time to respond
+                time.sleep(0.00005)
+                GPIO.output(self.PD_SCK, False)
                 databits[j][i] = GPIO.input(self.DOUT)  # Read the next bit
-                GPIO.output(self.PD_SCK, False)  # Tell the HX711 that you're done reading that bit
             databytes[j] = numpy.packbits(numpy.uint8(databits[j]))
 
         # set channel and gain factor for next reading
@@ -128,11 +128,11 @@ class HX711:
         for i in range(times):
             values.append(self.read_int())
         avg = numpy.average(values)
-        print("Average:", avg - self.OFFSET)
+        # print("Average:", avg - self.OFFSET)
         for value in values:
-            print("Checking:", value - self.OFFSET)
+            # print("Checking:", value - self.OFFSET)
             if (value > 2 * avg) or (value < int(avg/2)):
-                print("Removing:", value - self.OFFSET)
+                # print("Removing:", value - self.OFFSET)
                 values.remove(value)
         return int(numpy.average(values))
 
