@@ -148,8 +148,8 @@ class HX711:
 
     def get_weight(self, times=3):
         value = self.get_value(times)
-        value = value / self.REFERENCE_UNIT
-        return int(value)
+        value = value // self.REFERENCE_UNIT
+        return value
 
     def tare(self, times=15):
 
