@@ -15,10 +15,10 @@ class HX711:
         self.GAIN = 0
         self.REFERENCE_UNIT = 1  # Value returned that corresponds to your reference unit AFTER dividing by the SCALE.
 
-        self.OFFSET = 1
-        self.lastVal = 0
+        self.OFFSET = 1  # The zero offset of the scale
+        self.lastVal = 0  # The most recent reading of the scale
 
-        self.LSByte = [2, -1, -1]
+        self.LSByte = [2, -1, -1]  # The
         self.MSByte = [0, 3, 1]
 
         self.MSBit = [0, 8, 1]
@@ -27,7 +27,9 @@ class HX711:
         self.byte_range_values = self.LSByte
         self.bit_range_values = self.MSBit
 
-        self.set_gain(gain)
+        self.set_gain(gain)  # Set the gain based on the argument
+
+        self.empty_bool_list = [False] * 8
 
         time.sleep(1)
 
@@ -37,7 +39,7 @@ class HX711:
     def set_gain(self, gain):
         if gain is 128:
             self.GAIN = 1
-        elif gain is 64:
+        elif gain is 64:  # This will read from channel B
             self.GAIN = 3
         elif gain is 32:  # This will read from channel B
             self.GAIN = 2
@@ -45,39 +47,44 @@ class HX711:
         GPIO.output(self.PD_SCK, False)
         self.read()
 
-    def createBoolList(self, size=8):  # Create a boolean array for storing bitwise data
-        ret = []
-        for i in range(size):
-            ret.append(False)
-        return ret
-
     def read_alt(self):
         while not self.is_ready():
             pass
 
-        # databits = self.createBoolList(24)
+        databits = [self.empty_bool_list[:]] * 3  # Create an array of 8 bit arrays (3 bytes)
+        databytes = [0x0] * 4  # Create an array of 4 bytes of data
+
+        for j in range(2, -1, -1):
+            for i in range(0, 8, 1):
+                GPIO.output(self.PD_SCK, True)  # Tell the HX711 to give you the next bit
+                time.sleep(0.000025)  # Wait 25 microseconds (wait time min 0.2 microsec and max 50 microsec)
+                GPIO.output(self.PD_SCK, False)  # Reset the read flag (doesn't clear the value to be read)
+                time.sleep(0.000001)  # Wait 1 microsecond as min low time for read flag (wiat time min 0.1 microsec)
+                databits[j][i] = GPIO.input(self.DOUT)  # Read the next bit into the array
+            databytes[j] = numpy.packbits(numpy.uint8(databits[j]))
 
     def read(self):  # read the value from the HX711 and return as an array of 4 bytes
         while not self.is_ready():
             # print("WAITING")
             pass
 
-        databits = [self.createBoolList(), self.createBoolList(), self.createBoolList()]
+        databits = [self.empty_bool_list[:]] * 3
         databytes = [0x0] * 4
 
-        for j in range(self.byte_range_values[0], self.byte_range_values[1], self.byte_range_values[2]):
-            for i in range(self.bit_range_values[0], self.bit_range_values[1], self.bit_range_values[2]):
+        for j in range(2, -1, -1):
+            for i in range(0, 8, 1):
                 GPIO.output(self.PD_SCK, True)  # Tell the HX711 to give you the next bit
-                time.sleep(0.00005)
-                GPIO.output(self.PD_SCK, False)
-                databits[j][i] = GPIO.input(self.DOUT)  # Read the next bit
+                time.sleep(0.000025)  # Wait 25 microseconds (wait time min 0.2 microsec and max 50 microsec)
+                GPIO.output(self.PD_SCK, False)  # Reset the read flag (doesn't clear the value to be read)
+                databits[j][i] = GPIO.input(self.DOUT)  # Read the next bit into the array
             databytes[j] = numpy.packbits(numpy.uint8(databits[j]))
 
         # set channel and gain factor for next reading
         for i in range(self.GAIN):
             GPIO.output(self.PD_SCK, True)
+            time.sleep(0.000025)
             GPIO.output(self.PD_SCK, False)
-
+            time.sleep(0.000001)
         # check for all 1
         # if all(item is True for item in databits[0]):
         #    return self.lastVal
