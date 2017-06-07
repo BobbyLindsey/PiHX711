@@ -12,6 +12,8 @@ class HX711:
         GPIO.setup(self.PD_SCK, GPIO.OUT)
         GPIO.setup(self.DOUT, GPIO.IN)
 
+        self.empty_bool_list = [False] * 8
+
         self.GAIN = 0
         self.REFERENCE_UNIT = 1  # Value returned that corresponds to your reference unit AFTER dividing by the SCALE.
 
@@ -28,8 +30,6 @@ class HX711:
         self.bit_range_values = self.MSBit
 
         self.set_gain(gain)  # Set the gain based on the argument
-
-        self.empty_bool_list = [False] * 8
 
         time.sleep(1)
 
