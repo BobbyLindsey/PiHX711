@@ -119,14 +119,14 @@ class HX711:
         for i in range(times):
             values += self.read_int()
 
-        return values / times
+        return values // times
 
     def get_value(self, times=3):
         return self.read_average(times) - self.OFFSET
 
     def get_weight(self, times=3):
         value = self.get_value(times)
-        value = value / self.REFERENCE_UNIT
+        value = value // self.REFERENCE_UNIT
         return value
 
     def tare(self, times=15):

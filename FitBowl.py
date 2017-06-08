@@ -1,7 +1,7 @@
 import RPi.GPIO as GPIO
 import time
 import sys
-from hx7113 import HX711
+from hx71131 import HX711
 import smtplib
 from email.mime.text import MIMEText
 
