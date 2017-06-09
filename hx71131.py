@@ -65,7 +65,7 @@ class HX711:
                 # dataBits[j][i] = GPIO.input(self.DOUT)
                 # GPIO.output(self.PD_SCK, False)
                 GPIO.output(self.PD_SCK, True)  # Tell the HX711 to give you the next bit
-                time.sleep(0.000001)  # Wait 1 microsecond (wait time min 0.2 microsec and max 50 microsec)
+                time.sleep(0.0000001)  # Wait 0.1 microsecond (wait time min 0.2 microsec and max 50 microsec)
                 dataBits[j][i] = GPIO.input(self.DOUT)  # Read the next bit into the array
                 GPIO.output(self.PD_SCK, False)  # Reset the read flag (doesn't clear the value to be read)
                 time.sleep(0.000001)  # Wait 1 microsecond as min low time for read flag (wait time min 0.1 microsec)
