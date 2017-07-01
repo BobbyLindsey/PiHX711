@@ -29,14 +29,14 @@ class LoadCell:
     def _bit_request(self):
         # Send the HX711 chip the sequence to request a bit of data
 
-        GPIO.output(self.PD_SCK, True)
-        time.sleep(self._micros(1))  # Delay for additional 1 microsecond before releasing output
-        GPIO.output(self.PD_SCK, False)
+        GPIO.output((self.PD_SCK, self.PD_SCK), (True, False))
+        # time.sleep(self._micros(25))  # Delay for additional 1 microsecond before releasing output
+        # GPIO.output(self.PD_SCK, False)
 
     def _end_read(self):
         # Send the HX711 chip the sequence to complete a data bit request
 
-        self._bit_request() # send the last bit to tell the HX711 what it should read next
+        self._bit_request()  # send the last bit to tell the HX711 what it should read next
         if not GPIO.input(self.DOUT):
             # IMPROVE: Need to raise an error here. DOUT should go high when the 25th pulse is sent.
             pass
@@ -52,12 +52,12 @@ class LoadCell:
             pass
 
         outbits = []
-        time.sleep(self._micros(1))  # Wait 1 microsecond before the first pulse
+        # time.sleep(self._micros(1))  # Wait 1 microsecond before the first pulse
 
         for i in range(24):
             self._bit_request()
             outbits.append(GPIO.input(self.DOUT))
-            time.sleep(self._micros(1))  # Delay for additional 1 microsecond before finishing
+            # time.sleep(self._micros(1))  # Delay for additional 1 microsecond before finishing
 
         self._end_read()  # End the read
 
