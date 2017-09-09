@@ -57,9 +57,9 @@ class HX711:
         for j in range(2, -1, -1):
             for i in range(0, 8, 1):
                 GPIO.output(self.PD_SCK, True)  # Tell the HX711 to give you the next bit
-                time.sleep(0.000025)  # Wait 25 microseconds (wait time min 0.2 microsec and max 50 microsec)
+                #time.sleep(0.000025)  # Wait 25 microseconds (wait time min 0.2 microsec and max 50 microsec)
                 GPIO.output(self.PD_SCK, False)  # Reset the read flag (doesn't clear the value to be read)
-                time.sleep(0.000001)  # Wait 1 microsecond as min low time for read flag (wiat time min 0.1 microsec)
+                #time.sleep(0.000001)  # Wait 1 microsecond as min low time for read flag (wiat time min 0.1 microsec)
                 databits[j][i] = GPIO.input(self.DOUT)  # Read the next bit into the array
             databytes[j] = numpy.packbits(numpy.uint8(databits[j]))
 
@@ -74,7 +74,7 @@ class HX711:
         for j in range(self.byte_range_values[0], self.byte_range_values[1], self.byte_range_values[2]):
             for i in range(self.bit_range_values[0], self.bit_range_values[1], self.bit_range_values[2]):
                 GPIO.output(self.PD_SCK, True)  # Tell the HX711 to give you the next bit
-                time.sleep(0.000025)  # Wait 25 microseconds (wait time min 0.2 microsec and max 50 microsec)
+                #time.sleep(0.000025)  # Wait 25 microseconds (wait time min 0.2 microsec and max 50 microsec)
                 GPIO.output(self.PD_SCK, False)  # Reset the read flag (doesn't clear the value to be read)
                 databits[j][i] = GPIO.input(self.DOUT)  # Read the next bit into the array
             databytes[j] = numpy.packbits(numpy.uint8(databits[j]))
@@ -82,9 +82,9 @@ class HX711:
         # set channel and gain factor for next reading
         for i in range(self.GAIN):
             GPIO.output(self.PD_SCK, True)
-            time.sleep(0.000025)
+            #time.sleep(0.000025)
             GPIO.output(self.PD_SCK, False)
-            time.sleep(0.000001)
+            #time.sleep(0.000001)
         # check for all 1
         # if all(item is True for item in databits[0]):
         #    return self.lastVal
