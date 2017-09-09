@@ -44,6 +44,8 @@ while True:
         # Prints the weight. Comment if you're debbuging the MSB and LSB issue.
         val = hx.get_weight(5)
         print(val)
+        val = hx.get_value(5)
+        print(val)
 
         hx.power_down()
         hx.power_up()
