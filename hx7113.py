@@ -76,7 +76,7 @@ class HX711:
         #    return self.lastVal
 
         databytes[2] ^= 0x80
-        #print(databytes)
+        print(databytes)
 
         return databytes
 
